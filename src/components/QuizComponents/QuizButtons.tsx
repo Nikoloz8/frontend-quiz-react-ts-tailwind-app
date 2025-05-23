@@ -55,7 +55,7 @@ export default function Buttons({ quiz, questionCount, reveal, setSelected, setC
                 </button>
             })}
             <button onClick={handleSubmit}
-                className={`outline-none w-[100%] h-[92px] rounded-[24px] bg-[#A729F5] hover:bg-[rgba(167,41,245,0.5)]! items-center flex justify-center ${H5} text-[#FFFFFF]`}>{reveal ? "Submit Answer" : "Next Question"}</button>
+                className={`outline-none w-[100%] h-[92px] rounded-[24px] bg-[#A729F5] hover:bg-[rgba(167,41,245,0.5)]! active:bg-[#729F5]! items-center flex justify-center ${H5} text-[#FFFFFF]`}>{reveal ? "Submit Answer" : "Next Question"}</button>
             <h4 className={`${H5} text-[#EE5454] flex items-center justify-center gap-[8px]`}
                 style={chooseError ? { display: "flex" } : { display: "none" }}>
                 <img src="/images/icon-incorrect.svg" alt="" />

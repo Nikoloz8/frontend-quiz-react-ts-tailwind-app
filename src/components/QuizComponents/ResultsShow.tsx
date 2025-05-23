@@ -39,6 +39,6 @@ export default function ResultsShow({ ImageContainerDivStyle, quiz, H5, toggle, 
                 </h5>
             </div>
             <button onClick={() => navigate("/home")}
-                className={`max-sm:text-[1.8rem]! outline-none w-[100%] h-[92px] rounded-[24px] bg-[#A729F5] hover:bg-[rgba(167,41,245,0.5)]! items-center flex justify-center ${H5} text-[#FFFFFF]`}>Play Again</button>
+                className={`max-sm:text-[1.8rem]! outline-none w-[100%] h-[92px] rounded-[24px] bg-[#A729F5] hover:bg-[rgba(167,41,245,0.5)]! active:bg-[#729F5]! items-center flex justify-center ${H5} text-[#FFFFFF]`}>Play Again</button>
         </div>)
 }
