@@ -1,0 +1,13 @@
+@import "tailwindcss";
+
+@layer base {
+  html {
+    font-size: 62.5%;
+    font-family: "Rubik";
+  }
+
+  .active:active div div{
+      background-color: #F6E7FF !important;
+      color: #A729F5 !important;
+  }
+}
