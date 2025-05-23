@@ -1,9 +1,21 @@
-import { useNavigate, useParams } from "react-router-dom"
+import { useOutletContext, useParams } from "react-router-dom"
 import Data from "../../data.json"
 import tailwind from "../shared/tailwind"
 import { useState } from "react"
+import Toggle from "../components/Toggle"
+import TitleLevelCount from "../components/QuizComponents/TitleLevelCount"
+import Buttons from "../components/QuizComponents/QuizButtons"
+import TitleShow from "../components/QuizComponents/TitleShow"
+import ResultsText from "../components/QuizComponents/ResultsText"
+import ResultsShow from "../components/QuizComponents/ResultsShow"
+
+type TToggleContext = {
+    setToggle: React.Dispatch<React.SetStateAction<boolean>>
+    toggle: boolean,
+}
 
 export default function Quiz() {
+    const { toggle, setToggle } = useOutletContext<TToggleContext>()
     const { QuizId } = useParams()
 
     type Question = {
@@ -31,7 +43,6 @@ export default function Quiz() {
     const [reveal, setReveal] = useState(true)
     const [lastSelected, setLastSelected] = useState<number>(-1)
     const [chooseError, setChooseError] = useState<boolean>(false)
-    const navigate = useNavigate()
 
     const handleSubmit = () => {
 
@@ -52,7 +63,6 @@ export default function Quiz() {
 
 
         setChooseError(false)
-
         setLastSelected(selected)
         setSelected(-1)
 
@@ -84,110 +94,33 @@ export default function Quiz() {
     // console.log(quiz?.questions[questionCount].options)
 
     // console.log(!correctCheck())
+
     if (questionCount < 10) {
         return (
-            <div className="flex flex-col w-[1200px] gap-[50px]">
-                <div className="flex items-center gap-[24px]">
-                    <div className={`${ImageContainerDivStyle}`} style={
-                        quiz?.title === "HTML" ? { backgroundColor: "#FFF1E9" } : quiz?.title === "CSS" ? { backgroundColor: "#E0FDEF" } : quiz?.title === "JavaScript" ? { backgroundColor: "#EBF0FF" } : quiz?.title === "Accessibility" ? { backgroundColor: "#F6E7FF" } : undefined
-                    }>
-                        <img src={`${quiz?.icon}`} alt="" />
-                    </div>
-                    <h5 className={`${H5}`}>
-                        {quiz?.title}
-                    </h5>
+            <div className="flex flex-col w-[1200px] max-xl:w-[100%]! max-xl:p-[0_100px_0_100px]! gap-[50px] max-md:p-[0]!">
+                <div className="flex justify-between items-center">
+                    <TitleShow ImageContainerDivStyle={ImageContainerDivStyle} quiz={quiz} toggle={toggle} H5={H5} />
+                    <Toggle toggle={toggle} setToggle={setToggle} />
                 </div>
-                <div className="flex w-[100%] justify-between">
-                    <div className="flex flex-col gap-[27px]">
-                        <h6 className={`${P}`}>
-                            Question {questionCount} of 10
-                        </h6>
-                        <p className={`${H4}`}>
-                            {quiz?.questions[questionCount].question}
-                        </p>
-                    </div>
-                    <div className="min-w-[550px] flex flex-col gap-[24px]">
-                        {quiz?.questions[questionCount].options.map((question, index) => {
+                <div className="flex w-[100%] max-xl:flex-col gap-[100px] max-xl:gap-[50px]! justify-between">
 
-                            return <button onClick={() => {
-                                if (reveal) {
-                                    setSelected(index)
-                                    setChooseError(false)
-                                }
-                            }} key={index} className="w-[100%] flex cursor-pointer items-center p-[18px_20px_18px_20px] active justify-between h-[92px] bg-[#FFFFFF] rounded-[24px]"
+                    <TitleLevelCount P={P} toggle={toggle} questionCount={questionCount} H4={H4} quiz={quiz} />
 
-                                style={!reveal && correctCheck() === index ? { border: "3px solid #26D782" } : index === selected && reveal ? { border: "3px solid #A729F5" } : !reveal && correctCheck() !== lastSelected && lastSelected === index ? { border: "3px solid #EE5454" } : undefined}>
+                    <Buttons P={P} toggle={toggle} questionCount={questionCount} H4={H4} quiz={quiz} reveal={reveal} setSelected={setSelected} selected={selected} lastSelected={lastSelected} correctCheck={correctCheck} H5={H5} handleSubmit={handleSubmit} chooseError={chooseError} setChooseError={setChooseError} />
 
-                                <div className="flex gap-[32px] items-center">
-
-                                    <div className={`w-[56px] h-[56px] rounded-[8px] bg-[#F4F6FA] flex items-center justify-center ${H5}`}
-
-                                        style={!reveal && correctCheck() === index ? { backgroundColor: "#26D782" } : index === selected && reveal ? { backgroundColor: "#A729F5", color: "#FFFFFF" } : !reveal && correctCheck() !== lastSelected && lastSelected === index ? { backgroundColor: "#EE5454", color: "#FFFFFF" } : undefined}>
-
-                                        {index == 0 ? "A" : index == 1 ? "B" : index == 2 ? "C" : "D"}
-
-                                    </div>
-
-                                    <h5 className={`${H5}`}>{question}</h5>
-                                </div>
-
-                                <img src={`${correctCheck() === index ? "/images/icon-correct.svg" : "/images/icon-incorrect.svg"}`}
-
-                                    style={!reveal && (lastSelected == index || correctCheck() === index) ? { display: "block" } : { display: "none" }} alt="" />
-
-                            </button>
-                        })}
-                        <button onClick={handleSubmit}
-                            className={`outline-none w-[100%] h-[92px] rounded-[24px] bg-[#A729F5] items-center flex justify-center ${H5} text-[#FFFFFF]`}>{reveal ? "Submit Answer" : "Next Question"}</button>
-                        <h4 className={`${H5} text-[#EE5454] flex items-center justify-center gap-[8px]`}
-                            style={chooseError ? { display: "flex" } : { display: "none" }}>
-                            <img src="/images/icon-incorrect.svg" alt="" />
-                            Please select an answer
-                        </h4>
-                    </div>
                 </div>
             </div >
         )
     } else {
         return (
-            <div className="flex flex-col w-[1200px] gap-[50px]">
-                <div className="flex items-center gap-[24px]">
-                    <div className={`${ImageContainerDivStyle}`} style={
-                        quiz?.title === "HTML" ? { backgroundColor: "#FFF1E9" } : quiz?.title === "CSS" ? { backgroundColor: "#E0FDEF" } : quiz?.title === "JavaScript" ? { backgroundColor: "#EBF0FF" } : quiz?.title === "Accessibility" ? { backgroundColor: "#F6E7FF" } : undefined
-                    }>
-                        <img src={`${quiz?.icon}`} alt="" />
-                    </div>
-                    <h5 className={`${H5}`}>
-                        {quiz?.title}
-                    </h5>
+            <div className="flex flex-col w-[1200px] max-xl:w-[100%]! gap-[50px]">
+                <div className="flex justify-between items-center">
+                    <TitleShow ImageContainerDivStyle={ImageContainerDivStyle} quiz={quiz} toggle={toggle} H5={H5} />
+                    <Toggle toggle={toggle} setToggle={setToggle} />
                 </div>
-                <div className="flex justify-between">
-                    <div className="flex flex-col">
-                        <span className={`${H3}`}>Quiz completed</span>
-                        <span className={`${H1} text-[6.4rem]!`}>You scored...</span>
-                    </div>
-                    <div className="w-[550px] flex flex-col gap-[24px]">
-                        <div className="w-[100%] flex flex-col items-center justify-between h-[390px] bg-[#FFFFFF] p-[48px]! rounded-[24px]">
-                            <div className="flex items-center gap-[24px]">
-                                <div className={`${ImageContainerDivStyle}`} style={
-                                    quiz?.title === "HTML" ? { backgroundColor: "#FFF1E9" } : quiz?.title === "CSS" ? { backgroundColor: "#E0FDEF" } : quiz?.title === "JavaScript" ? { backgroundColor: "#EBF0FF" } : quiz?.title === "Accessibility" ? { backgroundColor: "#F6E7FF" } : undefined
-                                }>
-                                    <img src={`${quiz?.icon}`} alt="" />
-                                </div>
-                                <h5 className={`${H5}`}>
-                                    {quiz?.title}
-                                </h5>
-                            </div>
-                            <h1 className={`${H1} text-[14.4rem]!`}>
-                                {scoreCount}
-                            </h1>
-                            <h5 className={`${P} text-[2.4rem] text-[#626C7F]`}>
-                                out of 10
-                            </h5>
-                        </div>
-                        <button onClick={() => navigate("/home")}
-                            className={`outline-none w-[100%] h-[92px] rounded-[24px] bg-[#A729F5] items-center flex justify-center ${H5} text-[#FFFFFF]`}>Play Again</button>
-                    </div>
+                <div className="flex max-xl:flex-col max-xl:items-center max-xl:gap-[50px]! justify-between">
+                    <ResultsText toggle={toggle} H3={H3} H1={H1} />
+                    <ResultsShow ImageContainerDivStyle={ImageContainerDivStyle} quiz={quiz} H5={H5} toggle={toggle} scoreCount={scoreCount} H1={H1} P={P} />
                 </div>
             </div>
         )
