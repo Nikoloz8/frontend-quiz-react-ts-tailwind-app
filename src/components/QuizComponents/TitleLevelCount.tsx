@@ -24,7 +24,6 @@ export default function TitleLevelCount({ P, toggle, questionCount, H4, quiz }: 
             <div className="w-[100%] h-[16px] p-[4px]! bg-[#FFFFFF] rounded-[999px]">
                 <div className={`h-[100%] bg-[#A729F5] rounded-[999px]!`}
                     style={{ width: `${questionCount * 10}%`, transition: "1s" }}>
-
                 </div>
             </div>
         </div>)
